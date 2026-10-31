@@ -1,0 +1,16 @@
+# Ảnh gốc và file nén dung lượng lớn — không đưa lên Git
+drive-download-*/
+*.zip
+
+# Thư mục QA / screenshot
+qa/
+.playwright-mcp/
+.omo/
+.codegraph/
+test-results/
+playwright-report/
+
+# File tạm
+index.mojibake.bak.html
+Thumbs.db
+.DS_Store
