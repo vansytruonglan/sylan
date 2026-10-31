@@ -1,7 +1,14 @@
 (function () {
   "use strict";
 
-  var PHOTOS = Array.isArray(window.WEDDING_PHOTOS) ? window.WEDDING_PHOTOS : [];
+  var PHOTOS = [
+    { src: "assets/img/p21.webp", w: 933, h: 1400 },
+    { src: "assets/img/p40.webp", w: 933, h: 1400 },
+    { src: "assets/img/p03.webp", w: 933, h: 1400 },
+    { src: "assets/img/p25.webp", w: 933, h: 1400 },
+    { src: "assets/img/p31.webp", w: 933, h: 1400 },
+    { src: "assets/img/p08.webp", w: 933, h: 1400 }
+  ];
   var WISH_KEY = "sy-lan-wishes-v1";
   var RSVP_KEY = "sy-lan-rsvp-v1";
 
@@ -10,11 +17,6 @@
   var coverGuest = document.getElementById("coverGuest");
   var page = document.getElementById("page");
   var main = document.getElementById("main");
-
-  var galleryModal = document.getElementById("galleryModal");
-  var galleryGrid = document.getElementById("galleryGrid");
-  var galleryClose = document.getElementById("galleryClose");
-  var openGallery = document.getElementById("openGallery");
 
   var lightbox = document.getElementById("lightbox");
   var lbImg = document.getElementById("lbImg");
@@ -26,7 +28,6 @@
   var toastEl = document.getElementById("toast");
   var toastTimer = 0;
 
-  var galleryOpen = false;
   var lightboxOpen = false;
   var lbIndex = 0;
   var lbTrigger = null;
@@ -44,7 +45,7 @@
   }
 
   function syncLock() {
-    var locked = (cover && !cover.hidden && !cover.classList.contains("is-open")) || galleryOpen || lightboxOpen;
+    var locked = (cover && !cover.hidden && !cover.classList.contains("is-open")) || lightboxOpen;
     document.documentElement.classList.toggle("is-locked", locked);
   }
 
@@ -193,7 +194,7 @@
 
   buildCalendar();
 
-  var target = new Date("2026-11-27T15:00:00+07:00").getTime();
+  var target = new Date("2026-11-27T17:00:00+07:00").getTime();
   var cdDays = document.getElementById("cdDays");
   var cdHours = document.getElementById("cdHours");
   var cdMinutes = document.getElementById("cdMinutes");
@@ -435,56 +436,6 @@
     });
   });
 
-  if (galleryGrid) {
-    PHOTOS.forEach(function (photo, index) {
-      var button = document.createElement("button");
-      button.type = "button";
-      button.setAttribute("aria-label", "Xem ảnh " + (index + 1));
-
-      var img = document.createElement("img");
-      img.src = photo.src;
-      img.alt = "Ảnh cưới " + (index + 1);
-      img.loading = "lazy";
-      img.decoding = "async";
-
-      button.appendChild(img);
-      button.addEventListener("click", function () {
-        openLightbox(index);
-      });
-      galleryGrid.appendChild(button);
-    });
-  }
-
-  function openGalleryModal() {
-    if (!galleryModal) {
-      return;
-    }
-    galleryOpen = true;
-    galleryModal.hidden = false;
-    syncLock();
-    if (galleryClose) {
-      galleryClose.focus({ preventScroll: true });
-    }
-  }
-
-  function closeGalleryModal() {
-    if (!galleryModal || !galleryOpen) {
-      return;
-    }
-    galleryOpen = false;
-    galleryModal.hidden = true;
-    syncLock();
-    if (openGallery) {
-      openGallery.focus({ preventScroll: true });
-    }
-  }
-
-  if (openGallery) {
-    openGallery.addEventListener("click", openGalleryModal);
-  }
-  if (galleryClose) {
-    galleryClose.addEventListener("click", closeGalleryModal);
-  }
   if (lbClose) {
     lbClose.addEventListener("click", closeLightbox);
   }
@@ -500,9 +451,6 @@
   }
 
   document.addEventListener("click", function (event) {
-    if (event.target.closest("[data-close-gallery]")) {
-      closeGalleryModal();
-    }
     if (event.target.closest("[data-close-lightbox]")) {
       closeLightbox();
     }
@@ -512,8 +460,6 @@
     if (event.key === "Escape") {
       if (lightboxOpen) {
         closeLightbox();
-      } else if (galleryOpen) {
-        closeGalleryModal();
       }
       return;
     }
