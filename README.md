@@ -18,12 +18,12 @@ Mở `http://localhost:4174`.
 - Chú rể: **Nguyễn Văn Sỹ** — bố Nguyễn Trung Kiên, mẹ Bùi Thị Hoa.
 - Cô dâu: **Trương Thị Lan** — bố Trương Văn Khánh, mẹ Phạm Thị Quyên.
 - Ngày cưới: **Thứ Sáu, 27.11.2026**.
+- Giờ làm lễ: **15:00**.
 - Âm lịch: **19.10 Bính Ngọ**.
 - Địa điểm: **Tư gia nhà gái**.
 
 ## Cần bổ sung
 
-- Giờ làm lễ.
 - Địa chỉ cụ thể.
 - Thông tin tài khoản mừng cưới (nếu muốn hiển thị hộp quà).
 - Nội dung câu chuyện tình yêu riêng (hiện đang dùng lời dẫn chung).

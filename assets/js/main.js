@@ -193,7 +193,7 @@
 
   buildCalendar();
 
-  var target = new Date("2026-11-27T00:00:00+07:00").getTime();
+  var target = new Date("2026-11-27T15:00:00+07:00").getTime();
   var cdDays = document.getElementById("cdDays");
   var cdHours = document.getElementById("cdHours");
   var cdMinutes = document.getElementById("cdMinutes");
