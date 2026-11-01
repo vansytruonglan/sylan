@@ -162,7 +162,10 @@
             playlist: MUSIC_VIDEO_ID,
             playsinline: 1,
             rel: 0,
-            modestbranding: 1
+            modestbranding: 1,
+            fs: 0,
+            disablekb: 1,
+            iv_load_policy: 3
           },
           events: {
             onReady: function (event) {
@@ -170,6 +173,18 @@
               try {
                 event.target.setVolume(55);
               } catch (err) {}
+              var iframe = typeof event.target.getIframe === "function" ? event.target.getIframe() : null;
+              if (iframe) {
+                iframe.setAttribute("aria-hidden", "true");
+                iframe.setAttribute("tabindex", "-1");
+                iframe.style.position = "fixed";
+                iframe.style.top = "-9999px";
+                iframe.style.left = "-9999px";
+                iframe.style.width = "1px";
+                iframe.style.height = "1px";
+                iframe.style.opacity = "0";
+                iframe.style.pointerEvents = "none";
+              }
               if (musicWanted) {
                 try {
                   event.target.playVideo();

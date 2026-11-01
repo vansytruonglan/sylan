@@ -1290,19 +1290,24 @@ a {
 }
 
 .music-player {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  opacity: 0.001;
-  pointer-events: none;
+  position: fixed !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  clip-path: inset(100%) !important;
+  z-index: -1 !important;
 }
 
 .music-player iframe {
-  max-width: 1px;
-  max-height: 1px;
+  width: 1px !important;
+  height: 1px !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .cover:not([hidden]) ~ .music-toggle {
