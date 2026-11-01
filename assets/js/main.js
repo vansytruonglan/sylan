@@ -12,6 +12,11 @@
   var WISH_KEY = "sy-lan-wishes-v1";
   var RSVP_KEY = "sy-lan-rsvp-v1";
 
+  var ENDPOINTS = window.WEDDING_ENDPOINTS || {};
+  var WISH_ENDPOINT = ENDPOINTS.guestbook || "";
+  var RSVP_ENDPOINT = ENDPOINTS.rsvp || "";
+  var SIDE = (document.body && document.body.getAttribute("data-side")) || "nha-trai";
+
   var cover = document.getElementById("cover");
   var openBtn = document.getElementById("openInvitation");
   var coverGuest = document.getElementById("coverGuest");
@@ -241,6 +246,36 @@
     }
   }
 
+  function postForm(url, payload) {
+    if (!url) {
+      return Promise.resolve();
+    }
+    return fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      body: new URLSearchParams(payload).toString()
+    });
+  }
+
+  function updateEndpointNotes() {
+    var rsvpNote = document.getElementById("rsvpNote");
+    var wishNote = document.getElementById("wishNote");
+
+    if (rsvpNote) {
+      rsvpNote.textContent = RSVP_ENDPOINT
+        ? "Thông tin sẽ được gửi đến gia đình."
+        : "Thông tin được lưu trên thiết bị của bạn.";
+    }
+    if (wishNote) {
+      wishNote.textContent = WISH_ENDPOINT
+        ? "Lời chúc sẽ được gửi và hiển thị cho mọi người."
+        : "Lời chúc được lưu trên thiết bị của bạn.";
+    }
+  }
+
+  updateEndpointNotes();
+
   function formatTime(timestamp) {
     var date = new Date(timestamp);
     if (isNaN(date.getTime())) {
@@ -264,9 +299,38 @@
   var wishText = document.getElementById("wishText");
   var wishesEl = document.getElementById("wishes");
   var wishes = readStore(WISH_KEY, []);
+  var remoteWishes = [];
 
   if (!Array.isArray(wishes)) {
     wishes = [];
+  }
+
+  function mergeWishes() {
+    var merged = [];
+    var seen = {};
+
+    remoteWishes.concat(wishes).forEach(function (item) {
+      var name = String(item.name || "").trim();
+      var text = String(item.wish || "").trim();
+
+      if (!name || !text) {
+        return;
+      }
+
+      var key = name + "|" + text;
+      if (seen[key]) {
+        return;
+      }
+      seen[key] = true;
+      merged.push({
+        name: name,
+        wish: text,
+        time: Number(item.time) || 0,
+        side: item.side || ""
+      });
+    });
+
+    return merged;
   }
 
   function renderWishes() {
@@ -275,7 +339,7 @@
     }
 
     wishesEl.textContent = "";
-    var items = wishes.slice().sort(function (a, b) {
+    var items = mergeWishes().sort(function (a, b) {
       return (b.time || 0) - (a.time || 0);
     });
 
@@ -315,6 +379,45 @@
     });
   }
 
+  function loadRemoteWishes() {
+    if (!WISH_ENDPOINT) {
+      return;
+    }
+
+    var callbackName = "syLanWishes" + Date.now() + Math.floor(Math.random() * 1000);
+    var script = document.createElement("script");
+    var timeout = window.setTimeout(cleanup, 8000);
+
+    function cleanup() {
+      window.clearTimeout(timeout);
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+      try {
+        delete window[callbackName];
+      } catch (err) {
+        window[callbackName] = undefined;
+      }
+    }
+
+    window[callbackName] = function (payload) {
+      cleanup();
+      if (!payload || !Array.isArray(payload.wishes)) {
+        return;
+      }
+      remoteWishes = payload.wishes;
+      renderWishes();
+    };
+
+    script.onerror = cleanup;
+    script.src =
+      WISH_ENDPOINT +
+      (WISH_ENDPOINT.indexOf("?") === -1 ? "?" : "&") +
+      "action=wishes&callback=" +
+      encodeURIComponent(callbackName);
+    document.body.appendChild(script);
+  }
+
   if (wishForm) {
     wishForm.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -326,20 +429,37 @@
         return;
       }
 
-      wishes.unshift({
+      var entry = {
+        action: "wish",
         name: name,
         wish: text,
+        guest: guestName,
+        side: SIDE,
         time: Date.now()
-      });
+      };
+
+      wishes.unshift(entry);
       wishes = wishes.slice(0, 50);
       writeStore(WISH_KEY, wishes);
       renderWishes();
+
+      postForm(WISH_ENDPOINT, entry).catch(function () {});
+
       wishForm.reset();
-      showToast("Đã gửi lời chúc. Cảm ơn bạn!");
+      showToast(
+        WISH_ENDPOINT
+          ? "Đã gửi lời chúc. Cảm ơn bạn!"
+          : "Đã lưu lời chúc trên thiết bị này."
+      );
+
+      if (WISH_ENDPOINT) {
+        window.setTimeout(loadRemoteWishes, 1500);
+      }
     });
   }
 
   renderWishes();
+  loadRemoteWishes();
 
   var rsvpForm = document.getElementById("rsvpForm");
   var rsvpName = document.getElementById("rsvpName");
@@ -369,16 +489,27 @@
       if (!Array.isArray(list)) {
         list = [];
       }
-      list.unshift({
+      var entry = {
+        action: "rsvp",
         name: name,
         attend: attend,
         count: count,
         guest: guestName,
+        side: SIDE,
         time: Date.now()
-      });
+      };
+
+      list.unshift(entry);
       writeStore(RSVP_KEY, list.slice(0, 100));
+
+      postForm(RSVP_ENDPOINT, entry).catch(function () {});
+
       rsvpForm.reset();
-      showToast("Đã lưu xác nhận tham dự. Cảm ơn bạn!");
+      showToast(
+        RSVP_ENDPOINT
+          ? "Đã gửi xác nhận tham dự. Cảm ơn bạn!"
+          : "Đã lưu xác nhận tham dự trên thiết bị này."
+      );
     });
   }
 

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#b9827d">
+  <title>Tạo link mời khách</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23b9827d'/%3E%3Ctext x='16' y='21' font-family='Georgia,serif' font-size='11' letter-spacing='.5' fill='%23fffaf8' text-anchor='middle'%3ESL%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="assets/fonts/ebgaramond-500-normal-viet.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/lora-400-normal-viet.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="tool-page">
+  <main class="tool-shell">
+    <header class="tool-head">
+      <p class="tool-eyebrow">Thiệp cưới · Văn Sỹ &amp; Trương Lan</p>
+      <h1 class="tool-title">Tạo link mời khách</h1>
+      <p class="tool-intro">Nhập tên khách để tạo link thiệp riêng cho nhà trai và nhà gái. Tên khách sẽ hiển thị trên bìa thiệp khi khách mở link.</p>
+    </header>
+
+    <section class="tool-card" aria-labelledby="formTitle">
+      <h2 class="tool-sr-only" id="formTitle">Thông tin khách mời</h2>
+      <form class="tool-form" id="guestForm" novalidate>
+        <label class="tool-label" for="guestName">Tên khách</label>
+        <input class="tool-input" id="guestName" name="guestName" type="text" maxlength="80" placeholder="Ví dụ: Vợ chồng anh Minh Hiếu" autocomplete="off" spellcheck="false" required>
+        <p class="tool-error" id="formError" role="alert" hidden></p>
+        <button class="tool-submit" type="submit">Tạo link</button>
+      </form>
+
+      <div class="tool-result" id="result" hidden>
+        <div class="tool-result__row">
+          <label class="tool-result__label" for="groomLink">Link nhà trai</label>
+          <div class="tool-result__field">
+            <input class="tool-input tool-input--link" id="groomLink" type="text" readonly aria-label="Link mời nhà trai">
+            <button class="tool-copy" type="button" data-copy="groomLink">Sao chép</button>
+          </div>
+        </div>
+        <div class="tool-result__row">
+          <label class="tool-result__label" for="brideLink">Link nhà gái</label>
+          <div class="tool-result__field">
+            <input class="tool-input tool-input--link" id="brideLink" type="text" readonly aria-label="Link mời nhà gái">
+            <button class="tool-copy" type="button" data-copy="brideLink">Sao chép</button>
+          </div>
+        </div>
+        <p class="tool-status" id="copyStatus" role="status"></p>
+      </div>
+    </section>
+
+    <nav class="tool-links" aria-label="Mở thiệp">
+      <a href="index.html">Mở thiệp nhà trai</a>
+      <a href="nha-gai.html">Mở thiệp nhà gái</a>
+    </nav>
+  </main>
+
+  <script src="assets/js/tao-thiep.js" defer></script>
+</body>
+</html>
