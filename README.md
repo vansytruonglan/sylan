@@ -30,6 +30,12 @@ python -m http.server 4174
 
 Mở `http://localhost:4174`, `http://localhost:4174/nha-gai.html` hoặc `http://localhost:4174/tao-thiep.html`.
 
+## Nhạc nền
+
+- Bài hát: **“Lễ Đường của Hải Long & Salim”** — Kai Đinh, video YouTube `XqgyD0yadH0`.
+- Nhạc tự động phát khi khách vào thiệp (kể cả `?open=1`); nút nhạc nổi ở góc phải bên dưới dùng để tạm dừng hoặc phát lại.
+- Nhạc phát qua YouTube IFrame API (không tải hay trích xuất âm thanh). Trình duyệt chỉ cho phép phát có âm thanh sau một thao tác của người dùng, nên nếu bị chặn, khách chỉ cần bấm nút nhạc hoặc chạm/bấm vào bất kỳ đâu; mở bìa thiệp luôn khởi động nhạc.
+
 ## Google Sheet / Excel (tùy chọn)
 
 Hiện tại thiệp là bản tĩnh: xác nhận tham dự (RSVP) và lời chúc được lưu bằng `localStorage` trên thiết bị của khách. Muốn gom dữ liệu về một Google Sheet, làm theo các bước sau:

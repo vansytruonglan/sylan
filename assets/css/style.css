@@ -1217,6 +1217,99 @@ a {
   transform: translate(-50%, 0);
 }
 
+.music-toggle {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  z-index: 95;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 8px 14px;
+  color: var(--rose-deep);
+  font-family: var(--font-body);
+  background: var(--cream);
+  border: 1px solid var(--rose-mid);
+  border-radius: 999px;
+  box-shadow: 0 8px 22px rgba(138, 93, 89, 0.18);
+  cursor: pointer;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease),
+    border-color 0.25s var(--ease), box-shadow 0.25s var(--ease), opacity 0.25s var(--ease);
+}
+
+.music-toggle:hover {
+  background: var(--blush);
+  border-color: var(--rose);
+}
+
+.music-toggle:focus-visible {
+  outline: 2px solid rgba(138, 93, 89, 0.45);
+  outline-offset: 3px;
+}
+
+.music-toggle__icon {
+  flex: none;
+  width: 17px;
+  height: 17px;
+}
+
+.music-toggle__label {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.music-toggle.is-playing {
+  color: var(--white);
+  background: var(--rose);
+  border-color: var(--rose-deep);
+  box-shadow: 0 8px 24px rgba(138, 93, 89, 0.28);
+}
+
+.music-toggle.is-playing:hover {
+  background: var(--rose-deep);
+}
+
+.music-toggle.is-playing .music-toggle__icon {
+  animation: musicPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes musicPulse {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.14);
+  }
+}
+
+.music-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0.001;
+  pointer-events: none;
+}
+
+.music-player iframe {
+  max-width: 1px;
+  max-height: 1px;
+}
+
+.cover:not([hidden]) ~ .music-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(18px);
@@ -1274,6 +1367,12 @@ a {
   .countdown__grid {
     gap: 6px;
   }
+
+  .music-toggle {
+    right: 14px;
+    bottom: calc(14px + env(safe-area-inset-bottom));
+    padding: 7px 12px;
+  }
 }
 
 @media (max-width: 380px) {
@@ -1330,6 +1429,10 @@ a {
   .reveal {
     opacity: 1;
     transform: none;
+  }
+
+  .music-toggle.is-playing .music-toggle__icon {
+    animation: none;
   }
 }
 

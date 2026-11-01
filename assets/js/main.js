@@ -11,6 +11,7 @@
   ];
   var WISH_KEY = "sy-lan-wishes-v1";
   var RSVP_KEY = "sy-lan-rsvp-v1";
+  var MUSIC_VIDEO_ID = "XqgyD0yadH0";
 
   var ENDPOINTS = window.WEDDING_ENDPOINTS || {};
   var WISH_ENDPOINT = ENDPOINTS.guestbook || "";
@@ -32,6 +33,18 @@
 
   var toastEl = document.getElementById("toast");
   var toastTimer = 0;
+
+  var musicToggle = document.getElementById("musicToggle");
+  var musicLabel = musicToggle ? musicToggle.querySelector(".music-toggle__label") : null;
+  var ytPlayerEl = document.getElementById("ytPlayer");
+
+  var musicWanted = false;
+  var musicPlaying = false;
+  var ytPlayer = null;
+  var ytReady = false;
+  var ytLoading = false;
+  var ytFailed = false;
+  var ytCallbacks = [];
 
   var lightboxOpen = false;
   var lbIndex = 0;
@@ -59,6 +72,7 @@
       return;
     }
     cover.classList.add("is-open");
+    playMusic();
     if (page) {
       page.removeAttribute("inert");
     }
@@ -70,6 +84,166 @@
       cover.hidden = true;
       syncLock();
     }, 780);
+  }
+
+  function setMusicUi(playing) {
+    musicPlaying = !!playing;
+    if (musicToggle) {
+      musicToggle.classList.toggle("is-playing", playing);
+      musicToggle.setAttribute("aria-pressed", playing ? "true" : "false");
+      musicToggle.setAttribute("aria-label", playing ? "Tắt nhạc" : "Bật nhạc");
+    }
+    if (musicLabel) {
+      musicLabel.textContent = playing ? "Tắt nhạc" : "Bật nhạc";
+    }
+  }
+
+  function ensureYouTubeApi(callback) {
+    if (window.YT && typeof window.YT.Player === "function") {
+      callback();
+      return;
+    }
+    if (ytFailed) {
+      return;
+    }
+    if (ytCallbacks.indexOf(callback) === -1) {
+      ytCallbacks.push(callback);
+    }
+    if (ytLoading) {
+      return;
+    }
+    ytLoading = true;
+
+    var previousReady = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = function () {
+      if (typeof previousReady === "function") {
+        try {
+          previousReady();
+        } catch (err) {}
+      }
+      ytLoading = false;
+      var queue = ytCallbacks.slice();
+      ytCallbacks = [];
+      queue.forEach(function (fn) {
+        try {
+          fn();
+        } catch (err) {}
+      });
+    };
+
+    var tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    tag.async = true;
+    tag.onerror = function () {
+      ytFailed = true;
+      ytLoading = false;
+      ytCallbacks = [];
+      musicWanted = false;
+      setMusicUi(false);
+    };
+    document.head.appendChild(tag);
+  }
+
+  function createMusicPlayer() {
+    if (ytPlayer || ytFailed || !ytPlayerEl) {
+      return;
+    }
+    ensureYouTubeApi(function () {
+      if (ytPlayer || ytFailed || !window.YT || typeof window.YT.Player !== "function") {
+        return;
+      }
+      try {
+        ytPlayer = new window.YT.Player("ytPlayer", {
+          videoId: MUSIC_VIDEO_ID,
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            loop: 1,
+            playlist: MUSIC_VIDEO_ID,
+            playsinline: 1,
+            rel: 0,
+            modestbranding: 1
+          },
+          events: {
+            onReady: function (event) {
+              ytReady = true;
+              try {
+                event.target.setVolume(55);
+              } catch (err) {}
+              if (musicWanted) {
+                try {
+                  event.target.playVideo();
+                } catch (err) {}
+              }
+            },
+            onStateChange: function (event) {
+              if (!window.YT || !window.YT.PlayerState) {
+                return;
+              }
+              if (event.data === window.YT.PlayerState.PLAYING) {
+                setMusicUi(true);
+              } else if (event.data === window.YT.PlayerState.PAUSED) {
+                setMusicUi(false);
+              } else if (event.data === window.YT.PlayerState.ENDED) {
+                if (musicWanted) {
+                  try {
+                    event.target.seekTo(0);
+                    event.target.playVideo();
+                  } catch (err) {}
+                } else {
+                  setMusicUi(false);
+                }
+              }
+            },
+            onError: function () {
+              ytFailed = true;
+              musicWanted = false;
+              setMusicUi(false);
+            }
+          }
+        });
+      } catch (err) {
+        ytFailed = true;
+        ytPlayer = null;
+        setMusicUi(false);
+      }
+    });
+  }
+
+  function playMusic() {
+    musicWanted = true;
+    if (ytFailed) {
+      musicWanted = false;
+      setMusicUi(false);
+      return;
+    }
+    if (ytPlayer && ytReady && typeof ytPlayer.playVideo === "function") {
+      try {
+        ytPlayer.playVideo();
+      } catch (err) {}
+      return;
+    }
+    createMusicPlayer();
+  }
+
+  function pauseMusic() {
+    musicWanted = false;
+    setMusicUi(false);
+    if (ytPlayer && ytReady && typeof ytPlayer.pauseVideo === "function") {
+      try {
+        ytPlayer.pauseVideo();
+      } catch (err) {}
+    }
+  }
+
+  if (musicToggle) {
+    musicToggle.addEventListener("click", function () {
+      if (musicToggle.classList.contains("is-playing")) {
+        pauseMusic();
+      } else {
+        playMusic();
+      }
+    });
   }
 
   var params;
@@ -108,6 +282,23 @@
     if (openBtn) {
       openBtn.addEventListener("click", openInvitation);
     }
+  }
+
+  playMusic();
+
+  function retryMusicOnFirstGesture(event) {
+    if (event.target && event.target.closest && event.target.closest(".music-toggle")) {
+      return;
+    }
+    if (musicWanted && !musicPlaying) {
+      playMusic();
+    }
+  }
+
+  if (window.PointerEvent) {
+    document.addEventListener("pointerdown", retryMusicOnFirstGesture, { once: true });
+  } else {
+    document.addEventListener("click", retryMusicOnFirstGesture, { once: true });
   }
 
   var revealItems = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
