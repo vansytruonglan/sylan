@@ -18,6 +18,7 @@ Mở `http://localhost:4174`.
 - Chú rể: **Nguyễn Văn Sỹ** — bố Nguyễn Trung Kiên, mẹ Bùi Thị Hoa.
 - Cô dâu: **Trương Thị Lan** — bố Trương Văn Khánh, mẹ Phạm Thị Quyên.
 - Bản hiện tại: **thiệp nhà trai**.
+- Ngày cưới chính: **28.11.2026**.
 - Lễ vu quy: **15:00, Thứ Bảy 28.11.2026**.
 - Tiệc cưới nhà trai: **17:00, Thứ Sáu 27.11.2026**.
 - Địa điểm: **Nhà văn hóa thể thao Như Lân**.

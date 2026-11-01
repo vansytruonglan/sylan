@@ -139,7 +139,7 @@
 
     var year = 2026;
     var monthIndex = 10;
-    var highlight = 27;
+    var highlight = 28;
     calendar.textContent = "";
 
     var title = document.createElement("p");
@@ -194,7 +194,7 @@
 
   buildCalendar();
 
-  var target = new Date("2026-11-27T17:00:00+07:00").getTime();
+  var target = new Date("2026-11-28T15:00:00+07:00").getTime();
   var cdDays = document.getElementById("cdDays");
   var cdHours = document.getElementById("cdHours");
   var cdMinutes = document.getElementById("cdMinutes");
