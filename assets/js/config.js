@@ -5,6 +5,6 @@
    Hướng dẫn: google-apps-script/Code.gs
    ========================================================================== */
 window.WEDDING_ENDPOINTS = {
-  rsvp: "",
-  guestbook: ""
+  rsvp: "https://script.google.com/macros/s/AKfycbzI2Ya-6uauGf0fhHv4W43QH-yZfMvSEjwvpDMpai6S017RyKsCi81F3HTqqka4znZ5/exec",
+  guestbook: "https://script.google.com/macros/s/AKfycbzI2Ya-6uauGf0fhHv4W43QH-yZfMvSEjwvpDMpai6S017RyKsCi81F3HTqqka4znZ5/exec"
 };

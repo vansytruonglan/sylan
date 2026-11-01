@@ -36,9 +36,11 @@ Mở `http://localhost:4174`, `http://localhost:4174/nha-gai.html` hoặc `http:
 - Nhạc tự động phát khi khách vào thiệp (kể cả `?open=1`); nút nhạc nổi ở góc phải bên dưới dùng để tạm dừng hoặc phát lại.
 - Nhạc phát qua YouTube IFrame API (không tải hay trích xuất âm thanh). Trình duyệt chỉ cho phép phát có âm thanh sau một thao tác của người dùng, nên nếu bị chặn, khách chỉ cần bấm nút nhạc hoặc chạm/bấm vào bất kỳ đâu; mở bìa thiệp luôn khởi động nhạc.
 
-## Google Sheet / Excel (tùy chọn)
+## Google Sheet / Excel
 
-Hiện tại thiệp là bản tĩnh: xác nhận tham dự (RSVP) và lời chúc được lưu bằng `localStorage` trên thiết bị của khách. Muốn gom dữ liệu về một Google Sheet, làm theo các bước sau:
+Backend đã được cấu hình: Web App URL của Google Apps Script được điền sẵn trong `assets/js/config.js` cho cả RSVP và sổ lưu bút. Vì vậy xác nhận tham dự (RSVP) và lời chúc được đồng bộ trực tiếp lên Google Sheet của cặp đôi; nếu mất mạng, thiệp vẫn lưu tạm bằng `localStorage` trên thiết bị của khách. Có thể tải Sheet về dưới dạng Excel (`.xlsx`) khi cần.
+
+Nếu muốn dựng lại backend từ đầu, làm theo các bước sau:
 
 1. Tạo một Google Sheet mới.
 2. Vào **Extensions → Apps Script**, dán nội dung `google-apps-script/Code.gs` vào `Code.gs`, bấm **Save**.
@@ -46,7 +48,7 @@ Hiện tại thiệp là bản tĩnh: xác nhận tham dự (RSVP) và lời ch�
 4. Vào **Deploy → New deployment → Web app**:
    - Execute as: **Me**
    - Who has access: **Anyone**
-   - Sao chép **Web app URL**.
+   - Sao chép **Web app URL** (dạng `https://script.google.com/macros/s/.../exec`).
 5. Dán URL vào `assets/js/config.js`:
 
 ```js
@@ -56,7 +58,7 @@ window.WEDDING_ENDPOINTS = {
 };
 ```
 
-Cho đến khi URL được điền, RSVP và lời chúc vẫn dùng `localStorage`. `main.js` đọc cấu hình từ `config.js`, nhưng repo này **chưa cấu hình backend trực tiếp** (các URL đang để trống); muốn đồng bộ dữ liệu lên Google Sheet thì làm các bước trên. Có thể tải Sheet về dưới dạng Excel (`.xlsx`) khi cần.
+`main.js` đọc cấu hình từ `config.js`; khi cả hai URL đã được điền, dữ liệu RSVP và lời chúc sẽ gửi lên Google Sheet thay vì chỉ nằm trên thiết bị khách.
 
 ## Thông tin đã điền
 
@@ -87,7 +89,7 @@ assets/
   js/tao-thiep.js
   fonts/
   img/
-google-apps-script/Code.gs # mẫu Apps Script cho Google Sheet (nếu dùng)
+google-apps-script/Code.gs # mẫu Apps Script cho Google Sheet
 ```
 
-Sổ lưu bút và xác nhận tham dự hiện lưu trên thiết bị của khách. Khi cần đồng bộ tập trung, có thể nối Google Apps Script theo hướng dẫn phía trên.
+Sổ lưu bút và xác nhận tham dự được đồng bộ lên Google Sheet qua Google Apps Script Web App đã cấu hình trong `assets/js/config.js`.
