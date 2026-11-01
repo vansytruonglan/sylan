@@ -66,6 +66,7 @@ Cho đến khi URL được điền, RSVP và lời chúc vẫn dùng `localStor
 - Lễ vu quy: **15:00, Thứ Bảy 28.11.2026**.
 - Tiệc cưới nhà trai: **17:00, Thứ Sáu 27.11.2026**.
 - Địa điểm: **Nhà văn hóa thể thao Như Lân**.
+- Bản nhà gái: Lễ vu quy 15:00 28.11.2026; Tiệc cưới nhà gái 09:00 28.11.2026; địa điểm Khu tái định cư Mễ Sở.
 
 ## Cần bổ sung
 
